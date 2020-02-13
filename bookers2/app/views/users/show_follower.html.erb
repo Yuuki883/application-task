@@ -1,0 +1,50 @@
+<div class='container'>
+    <div class='row'>
+        <div class='col-xs-9'>
+            <h2>follower users</h2>
+            <% @user.followers.each do |user| %>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><%= attachment_image_tag user, :profile_image, :fill, 50, 50,
+                                fallback:"no-image-mini.jpg" %></td>
+                            <td><%= user.name %></td>
+                                <td>
+                                <% @user ||= current_user %>
+                                    <a href="<%= following_user_path(user) %>">
+                                        <strong id="following" class="stat">
+                                            フォロー数:<%= user.followings.count %>
+                                        </strong>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="<%= followers_user_path(user) %>">
+                                        <strong id="followers" class="stat">
+                                            フォロワー数<%= user.followers.count %>
+                                        </strong>
+                                    </a>
+                                </td>
+                                <td>
+                                    <% unless current_user?(user) %>
+                                        <div id="follow_form">
+                                            <% if current_user.following?(user) %>
+                                                <%= form_for(current_user.following_relationships.find_by(following_id: user.id), html: { method: :delete }) do |f| %>
+                                                <%= f.submit "Unfollow", class: "btn btn-large follow-btn" %>
+                                            <% end %>
+                                            <% else %>
+                                                <%= form_for(current_user.following_relationships.build(following_id: user.id)) do |f| %>
+                                                <div><%= f.hidden_field :following_id %></div>
+                                                <%= f.submit "Follow", class: "btn btn-large btn-primary follow-btn" %>
+                                                <% end %>
+                                            <% end %>
+                                        </div>
+                                      <% end %>
+                                </td>
+                                <td><%= link_to 'Show', user_path(user) %></td>
+                        </tr>
+                    </tbody>
+              </table>
+            <% end %>
+      </div>
+  </div>
+</div>

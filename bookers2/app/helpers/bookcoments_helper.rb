@@ -1,0 +1,2 @@
+module BookcomentsHelper
+end
